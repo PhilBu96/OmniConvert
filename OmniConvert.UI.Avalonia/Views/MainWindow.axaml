@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="OmniConvert.UI.Avalonia.Views.MainWindow"
+        Title="OmniConvert"
+        Width="800" Height="240"
+        Background="White">
+  <StackPanel Margin="10" Spacing="8">
+    <TextBlock Text="Input File:"/>
+    <StackPanel Orientation="Horizontal" Spacing="5">
+      <TextBox Name="InputFilePath" Width="450" IsReadOnly="True"/>
+      <Button Content="Browse…" Click="Browse_Click"/>
+    </StackPanel>
+    <TextBlock Text="Target Format:" Margin="0,10,0,0"/>
+    <StackPanel Orientation="Horizontal" Spacing="5">
+      <ComboBox Name="FormatComboBox" Width="100">
+        <ComboBoxItem Content="png" IsSelected="True"/>
+        <ComboBoxItem Content="jpg"/>
+      </ComboBox>
+      <Button Content="Convert" Click="Convert_Click"/>
+    </StackPanel>
+    <TextBlock Name="StatusText" Foreground="Gray" Text="Ready." Margin="0,10,0,0"/>
+  </StackPanel>
+</Window>
