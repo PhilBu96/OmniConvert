@@ -1,11 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using SixLabors.ImageSharp;
 using System;
 using System.IO;
 using System.Linq;
-using Image = SixLabors.ImageSharp.Image;
+using OmniConvert.Core;
 
 namespace OmniConvert.UI.Avalonia.Views
 {
@@ -41,6 +40,8 @@ namespace OmniConvert.UI.Avalonia.Views
                 StatusText.Text = "Bitte erst eine gültige Datei auswählen.";
                 return;
             }
+
+            // Zielformat ermitteln
             var fmt = (FormatComboBox.SelectedItem as ComboBoxItem)?
                           .Content?.ToString()?.ToLowerInvariant();
             if (fmt != "png" && fmt != "jpg")
@@ -48,11 +49,39 @@ namespace OmniConvert.UI.Avalonia.Views
                 StatusText.Text = "Wähle bitte png oder jpg.";
                 return;
             }
+
+            // Save File Picker Optionen
+            var saveOptions = new FilePickerSaveOptions
+            {
+                Title = "Zieldatei speichern als",
+                DefaultExtension = "." + fmt,
+                //InitialFileName = Path.GetFileNameWithoutExtension(input) + "." + fmt,
+                SuggestedFileName = Path.GetFileNameWithoutExtension(input) + "." + fmt,
+                ShowOverwritePrompt = true,
+                FileTypeChoices = new[]
+                {
+                    new FilePickerFileType(fmt.ToUpperInvariant())
+                    {
+                        Patterns = new[] { "*." + fmt }
+                    }
+                }
+            };
+
+            // Zeige den Save-Dialog an
+            var saveResult = await this.StorageProvider.SaveFilePickerAsync(saveOptions);
+            var targetFile = saveResult as IStorageFile;
+            var outPath = targetFile?.TryGetLocalPath();
+            if (outPath is null)
+            {
+                StatusText.Text = "Speichern abgebrochen oder nicht möglich.";
+                return;
+            }
+
             try
             {
-                var outPath = Path.ChangeExtension(input, fmt);
-                using var img = await Image.LoadAsync(input);
-                await img.SaveAsync(outPath);
+                // Core-Converter verwenden
+                IConverter converter = new JpgPngConverter();
+                await converter.ConvertAsync(input, outPath);
                 StatusText.Text = $"Erstellt: {outPath}";
             }
             catch (Exception ex)
@@ -60,5 +89,7 @@ namespace OmniConvert.UI.Avalonia.Views
                 StatusText.Text = $"Fehler: {ex.Message}";
             }
         }
+
+
     }
 }

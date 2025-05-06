@@ -8,7 +8,7 @@
     <TextBlock Text="Input File:"/>
     <StackPanel Orientation="Horizontal" Spacing="5">
       <TextBox Name="InputFilePath" Width="450" IsReadOnly="True"/>
-      <Button Content="Browse…" Click="Browse_Click"/>
+      <Button Content="Durchsuchen" Click="Browse_Click"/>
     </StackPanel>
     <TextBlock Text="Target Format:" Margin="0,10,0,0"/>
     <StackPanel Orientation="Horizontal" Spacing="5">
@@ -16,7 +16,7 @@
         <ComboBoxItem Content="png" IsSelected="True"/>
         <ComboBoxItem Content="jpg"/>
       </ComboBox>
-      <Button Content="Convert" Click="Convert_Click"/>
+      <Button Content="Konvertieren" Click="Convert_Click"/>
     </StackPanel>
     <TextBlock Name="StatusText" Foreground="Gray" Text="Ready." Margin="0,10,0,0"/>
   </StackPanel>
